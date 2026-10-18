@@ -9,12 +9,15 @@ from pydantic import BaseModel, Field
 
 from detector import analyze_conversation, VERSION
 from linkcheck import find_links, check_url
+from calls import router as calls_router
 
 MAX_AUDIO = 25 * 1024 * 1024
 LANGS = {"en", "hi", "auto"}
 
 app = FastAPI(title="Kavach AI API", version=VERSION)
 app.add_middleware(CORSMiddleware, allow_origins=os.getenv("KAVACH_CORS", "*").split(","), allow_methods=["*"], allow_headers=["*"])
+
+app.include_router(calls_router)
 
 
 def auth(x_api_key: Optional[str] = Header(default=None)):
